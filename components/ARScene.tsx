@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { XR, createXRStore } from "@react-three/xr";
 import { useGLTF, Environment, useProgress, Html } from "@react-three/drei";
 import { ErrorBoundary } from "react-error-boundary";
+import { AudioManager } from "./AudioManager";
 
 const store = createXRStore();
 
@@ -54,6 +55,7 @@ function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
           </Suspense>
         </XR>
       </Canvas>
+      <AudioManager characterName="John" />
     </div>
   );
 }
