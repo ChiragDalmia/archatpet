@@ -8,9 +8,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type { PutBlobResult } from "@vercel/blob";
+
+interface ModelData {
+  status: string;
+  model_urls?: {
+    glb: string;
+  };
+  task_error?: {
+    message: string;
+  };
+}
 
 export default function PetModelCreator() {
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<PutBlobResult[]>([]);
   const [modelUrl, setModelUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(false);
@@ -21,13 +32,15 @@ export default function PetModelCreator() {
   const streamRef = useRef<MediaStream | null>(null);
   const router = useRouter();
 
-  const captureImage = () => {
+  const captureImage = async () => {
     if (videoRef.current && canvasRef.current) {
       const context = canvasRef.current.getContext("2d");
       if (context) {
         context.drawImage(videoRef.current, 0, 0, 640, 480);
-        const imageDataUrl = canvasRef.current.toDataURL("image/jpeg");
-        setImages((prevImages) => [...prevImages, imageDataUrl]);
+        const blob = await new Promise<Blob>((resolve) =>
+          canvasRef.current!.toBlob(resolve as BlobCallback, "image/jpeg")
+        );
+        await uploadImage(blob, `captured-image-${Date.now()}.jpg`);
       }
     }
   };
@@ -64,13 +77,28 @@ export default function PetModelCreator() {
     }
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImage = async (file: File | Blob, fileName: string) => {
+    try {
+      const response = await fetch(`/api/upload?filename=${fileName}`, {
+        method: "POST",
+        body: file,
+      });
+
+      const newBlob = (await response.json()) as PutBlobResult;
+      setImages((prevImages) => [...prevImages, newBlob]);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setImages((prevImages) => [...prevImages, ...newImages]);
+      for (let i = 0; i < files.length; i++) {
+        await uploadImage(files[i], files[i].name);
+      }
     }
   };
 
@@ -82,7 +110,7 @@ export default function PetModelCreator() {
     e.preventDefault();
     setLoading(true);
     try {
-      const imageUrl = images[0];
+      const imageUrl = images[0].url;
       const response = await fetch("/api/create-model", {
         method: "POST",
         headers: {
@@ -114,12 +142,12 @@ export default function PetModelCreator() {
     }
   };
 
-  const pollTaskCompletion = async (taskId: string): Promise<any> => {
+  const pollTaskCompletion = async (taskId: string): Promise<ModelData> => {
     return new Promise((resolve, reject) => {
       const pollInterval = setInterval(async () => {
         try {
           const response = await fetch(`/api/create-model?taskId=${taskId}`);
-          const data = await response.json();
+          const data = (await response.json()) as ModelData;
           if (data.status === "SUCCEEDED") {
             clearInterval(pollInterval);
             resolve(data);
@@ -189,7 +217,7 @@ export default function PetModelCreator() {
             {images.map((image, index) => (
               <div key={index} className="relative">
                 <Image
-                  src={image}
+                  src={image.url}
                   alt={`Pet ${index + 1}`}
                   width={200}
                   height={150}

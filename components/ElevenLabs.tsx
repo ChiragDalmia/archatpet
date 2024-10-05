@@ -11,7 +11,7 @@ const ElevenLabsComponent: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   const elevenlabs = useMemo(() => new ElevenLabsClient({
-    apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
+    apiKey: process.env.ELEVENLABS_API_KEY,
   }), []);
 
   useEffect(() => {
