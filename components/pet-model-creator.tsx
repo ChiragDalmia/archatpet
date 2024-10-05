@@ -82,30 +82,28 @@ export default function PetModelCreator() {
     e.preventDefault();
     setLoading(true);
     try {
-      // We'll use the first image for this example
       const imageUrl = images[0];
-
-      const response = await fetch("https://api.meshy.ai/v1/image-to-3d", {
+      const response = await fetch("/api/create-model", {
         method: "POST",
         headers: {
-          Authorization: "Bearer YOUR_API_KEY_HERE",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          image_url: imageUrl,
-          enable_pbr: true,
-          ai_model: "meshy-4", // Using meshy-4 for better quality
-          topology: "quad",
-          target_polycount: 30000, // Maximum for free users
-        }),
+        body: JSON.stringify({ imageUrl }),
       });
 
       const data = await response.json();
       if (data.result) {
-        // Store the task ID
-        const taskId = data.result;
-        // Poll for task completion
-        await pollTaskCompletion(taskId);
+        const modelData = await pollTaskCompletion(data.result);
+        if (modelData && modelData.model_urls && modelData.model_urls.glb) {
+          setModelUrl(modelData.model_urls.glb);
+          router.push(
+            `/scene/${encodeURIComponent(
+              petName
+            )}?modelUrl=${encodeURIComponent(modelData.model_urls.glb)}`
+          );
+        } else {
+          console.error("Model URL not found in the response");
+        }
       } else {
         console.error("Error creating 3D model:", data.message);
       }
@@ -113,35 +111,29 @@ export default function PetModelCreator() {
       console.error("Error creating 3D model:", error);
     } finally {
       setLoading(false);
-      // Navigate to the pet details page after model creation
-      router.push(`/scene/${encodeURIComponent(petName)}`);
     }
   };
 
-  const pollTaskCompletion = async (taskId: string) => {
-    const pollInterval = setInterval(async () => {
-      try {
-        const response = await fetch(
-          `https://api.meshy.ai/v1/image-to-3d/${taskId}`,
-          {
-            headers: {
-              Authorization: "Bearer YOUR_API_KEY_HERE",
-            },
+  const pollTaskCompletion = async (taskId: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const pollInterval = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/create-model?taskId=${taskId}`);
+          const data = await response.json();
+          if (data.status === "SUCCEEDED") {
+            clearInterval(pollInterval);
+            resolve(data);
+          } else if (data.status === "FAILED") {
+            clearInterval(pollInterval);
+            reject(new Error(data.task_error?.message || "Task failed"));
           }
-        );
-
-        const data = await response.json();
-        if (data.status === "SUCCEEDED") {
+        } catch (error) {
+          console.error("Error polling task:", error);
           clearInterval(pollInterval);
-          setModelUrl(data.model_urls.glb);
-        } else if (data.status === "FAILED") {
-          clearInterval(pollInterval);
-          console.error("Task failed:", data.task_error.message);
+          reject(error);
         }
-      } catch (error) {
-        console.error("Error polling task:", error);
-      }
-    }, 5000); // Poll every 5 seconds
+      }, 5000);
+    });
   };
 
   return (
