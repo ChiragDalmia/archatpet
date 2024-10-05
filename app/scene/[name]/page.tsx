@@ -4,8 +4,6 @@ import { useParams, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 
-
-// const RecordAudio = dynamic(() => import("@/components/RecordAudio"), { ssr: false });
 const ARScene = dynamic(() => import("@/components/ARScene"), {
   ssr: false,
   loading: () => <p>Loading AR Scene...</p>,
@@ -29,14 +27,12 @@ export default function ScenePage() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1 className="text-4xl font-bold mb-8">AR Scene for {petName}</h1>
       <div className="mb-4 text-sm">
-        <p className="font-bold mt-2">Decoded Model URL:</p>
+        <p className="font-bold mt-2">Model URL:</p>
         <p className="break-all">{modelUrl}</p>
       </div>
       <Suspense fallback={<div>Loading AR Scene...</div>}>
         <ARScene modelURL={modelUrl} />
       </Suspense>
-
-      {/* <RecordAudio characterName="John" /> */}
     </main>
   );
 }

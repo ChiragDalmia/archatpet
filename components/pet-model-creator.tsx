@@ -105,43 +105,41 @@ export default function PetModelCreator() {
   const removeImage = (index: number) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
+const createModel = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    const imageUrl = images[0].url;
+    const response = await fetch("/api/create-model", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ imageUrl }),
+    });
 
-  const createModel = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const imageUrl = images[0].url;
-      const response = await fetch("/api/create-model", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ imageUrl }),
-      });
-
-      const data = await response.json();
-      if (data.result) {
-        const modelData = await pollTaskCompletion(data.result);
-        if (modelData && modelData.model_urls && modelData.model_urls.glb) {
-          setModelUrl(modelData.model_urls.glb);
-          router.push(
-            `/scene/${encodeURIComponent(
-              petName
-            )}?modelUrl=${encodeURIComponent(modelData.model_urls.glb)}`
-          );
-        } else {
-          console.error("Model URL not found in the response");
-        }
+    const data = await response.json();
+    if (data.result) {
+      const modelData = await pollTaskCompletion(data.result);
+      if (modelData && modelData.model_urls && modelData.model_urls.glb) {
+        setModelUrl(modelData.model_urls.glb);
+        router.push(
+          `/scene/${encodeURIComponent(petName)}?modelUrl=${encodeURIComponent(
+            modelData.model_urls.glb
+          )}`
+        );
       } else {
-        console.error("Error creating 3D model:", data.message);
+        console.error("Model URL not found in the response");
       }
-    } catch (error) {
-      console.error("Error creating 3D model:", error);
-    } finally {
-      setLoading(false);
+    } else {
+      console.error("Error creating 3D model:", data.message);
     }
-  };
-
+  } catch (error) {
+    console.error("Error creating 3D model:", error);
+  } finally {
+    setLoading(false);
+  }
+};
   const pollTaskCompletion = async (taskId: string): Promise<ModelData> => {
     return new Promise((resolve, reject) => {
       const pollInterval = setInterval(async () => {

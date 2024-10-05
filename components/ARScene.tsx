@@ -38,7 +38,7 @@ function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
     <div className="ar-scene w-full h-screen bg-background relative">
       <button
         onClick={handleEnterAR}
-        className="absolute top-4 right-4 z-10 px-6 py-3 bg-primary text-primary-foreground rounded-full hover:bg-primary-foreground hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition-colors duration-200 font-sans text-lg font-bold"
+       className="absolute top-4 right-4 z-10 px-6 py-3 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition-colors duration-200 font-sans text-lg font-bold"
       >
         Enter AR
       </button>

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { put } from "@vercel/blob";
 
 const API_KEY = process.env.MESHY_API_KEY;
 
@@ -51,6 +52,18 @@ export async function GET(request: Request) {
     );
 
     const data = await response.json();
+
+    if (data.status === "SUCCEEDED" && data.model_urls && data.model_urls.glb) {
+      const modelResponse = await fetch(data.model_urls.glb);
+      const modelBlob = await modelResponse.blob();
+
+      const uploadedBlob = await put(`models/${taskId}.glb`, modelBlob, {
+        access: "public",
+      });
+
+      data.model_urls.glb = uploadedBlob.url;
+    }
+
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error polling task:", error);
