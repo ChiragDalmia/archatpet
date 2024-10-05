@@ -9,7 +9,7 @@ const store = createXRStore();
 
 function Model({ url }: { url: string }) {
   const { scene } = useGLTF(url);
-  return <primitive object={scene} scale={50} position={[0, 0, -4]} />;
+  return <primitive object={scene} scale={0.5} position={[0, 0, -7]} />;
 }
 
 function ARScene() {
@@ -26,7 +26,7 @@ function ARScene() {
         <XR store={store}>
           <Suspense fallback={null}>
             <Environment preset="sunset" />
-            <ambientLight intensity={3} />
+            <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} />
 
             {/* Your 3D model */}
