@@ -1,7 +1,7 @@
-import RecordAudio from "@/components/RecordAudio";
 import dynamic from "next/dynamic";
 
-// const ARScene = dynamic(() => import("@/components/ARScene"), { ssr: false });
+const ARScene = dynamic(() => import("@/components/ARScene"), { ssr: false });
+const RecordAudio = dynamic(() => import("@/components/RecordAudio"), { ssr: false });
 
 export default function Home() {
   return (

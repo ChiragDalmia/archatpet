@@ -1,30 +1,51 @@
 "use client";
 
-import 'regenerator-runtime/runtime';
-import React from 'react';
+import "regenerator-runtime/runtime";
+import React, { useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
 const RecordAudio = () => {
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
+  const [message, setMessage] = useState('')
+
+  const commands = [
+    {
+      command: 'I would like to order *',
+      callback: (food) => setMessage(`Your order is for: ${food}`)
+    },
+    {
+      command: 'Beijing',
+      callback: (command, spokenPhrase, similarityRatio) => setMessage(`${command} and ${spokenPhrase} are ${similarityRatio * 100}% similar`),
+      // If the spokenPhrase is "Benji", the message would be "Beijing and Benji are 40% similar"
+      isFuzzyMatch: true,
+      fuzzyMatchingThreshold: 0.2
+    },
+    {
+      command: ['eat', 'sleep', 'leave'],
+      callback: (command) => setMessage(`Best matching command: ${command}`),
+      isFuzzyMatch: true,
+      fuzzyMatchingThreshold: 0.2,
+      bestMatchOnly: true
+    },
+    {
+      command: 'clear',
+      callback: ({ resetTranscript }) => resetTranscript()
+    }
+  ]
+
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition({ commands });
+  SpeechRecognition.startListening({ continuous: true })
 
   if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
+    return <p>Browser doesn't support speech recognition.</p>
   }
 
   return (
     <div>
-      <p>Microphone: {listening ? 'on' : 'off'}</p>
-      <button onClick={SpeechRecognition.startListening}>Start</button>
-      <button onClick={SpeechRecognition.stopListening}>Stop</button>
-      <button onClick={resetTranscript}>Reset</button>
+      <p>Microphone: {listening ? "on" : "off"}</p>
       <p>{transcript}</p>
+      <p>Message: {message}</p>
     </div>
   );
 };
