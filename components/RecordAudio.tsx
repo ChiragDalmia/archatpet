@@ -1,37 +1,60 @@
 "use client";
 
 import "regenerator-runtime/runtime";
-import React, { useState } from "react";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const RecordAudio = () => {
+const RecordAudio = ({ characterName }: { characterName: string }) => {
+  const lowerCaseCharacterName = characterName.toLowerCase();
+  const stopTalkingTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+  const [isTalking, setIsTalking] = useState(false);
   const [message, setMessage] = useState("");
+  const [prevTranscript, setPrevTranscript] = useState("");
 
-  const audioCallback = (command: string, spokenPhrase: string, similarityRatio: number) => {
-    setMessage(
-      `${command} and ${spokenPhrase} are ${similarityRatio * 100}% similar`
-    );
-  };
+  const updateIsTalking = useCallback((currentTranscript: string) => {
+    const relevantSpeech = currentTranscript.slice(prevTranscript.length);
 
-  const commands = [
-    {
-      command: "hey jellybean *",
-      callback: audioCallback,
-      isFuzzyMatch: true,
-      fuzzyMatchingThreshold: 0.2,
-    },
-  ];
+    if (isTalking) {
+      setMessage((prev) => prev + relevantSpeech);
+      
+      if (stopTalkingTimeout.current) {
+        clearTimeout(stopTalkingTimeout.current);
+      }
 
-  const {
-    transcript,
-    listening,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition({ commands });
+      stopTalkingTimeout.current = setTimeout(() => {
+        setIsTalking(false);
+        console.log("Stopped paying attention");
+      }, 4000);
+    }
 
-  // continuous listening
-  SpeechRecognition.startListening({ continuous: true });
+    const lowerTranscript = currentTranscript.toLowerCase();
+    if (lowerTranscript.includes(lowerCaseCharacterName) && !isTalking && message === "") {
+      setIsTalking(true);
+      console.log("Started paying attention");
+    }
+  }, [isTalking, message, prevTranscript, lowerCaseCharacterName]);
+
+  // Start continuous listening on mount
+  useEffect(() => {
+    if (browserSupportsSpeechRecognition) {
+      SpeechRecognition.startListening({ continuous: true });
+    }
+    return () => {
+      SpeechRecognition.stopListening();
+      if (stopTalkingTimeout.current) {
+        clearTimeout(stopTalkingTimeout.current);
+      }
+    };
+  }, [browserSupportsSpeechRecognition]);
+
+  // Update state based on transcript changes
+  useEffect(() => {
+    updateIsTalking(transcript);
+    setPrevTranscript(transcript);
+  }, [transcript, updateIsTalking]);
 
   if (!browserSupportsSpeechRecognition) {
     return <p>Browser doesn't support speech recognition.</p>;
@@ -39,10 +62,10 @@ const RecordAudio = () => {
 
   return (
     <div>
-      <p>Microphone: {listening ? "on" : "off"}</p>
-      <p>{transcript}</p>
+      <p>{isTalking ? "Listening!" : "Not listening!"}</p>
       <p>Message: {message}</p>
     </div>
   );
 };
+
 export default RecordAudio;
