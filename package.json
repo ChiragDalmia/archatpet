@@ -13,6 +13,7 @@
     "@react-three/fiber": "^8.17.9",
     "@react-three/xr": "^6.2.13",
     "@types/three": "^0.169.0",
+    "elevenlabs": "^0.16.1",
     "next": "14.2.14",
     "openai": "^4.67.1",
     "react": "^18",
