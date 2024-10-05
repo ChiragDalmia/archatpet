@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ElevenLabsClient } from 'elevenlabs';
 import { GetVoicesResponse } from 'elevenlabs/api/types';
 import { Readable } from 'stream';
 
-const ElevenLabsComponent: React.FC = () => {
+const ElevenLabsComponentUI: React.FC = () => {
   const [text, setText] = useState('');
   const [model, setModel] = useState('eleven_multilingual_v2');
   const [voices, setVoices] = useState<GetVoicesResponse>({ voices: [] });
   const [selectedVoice, setSelectedVoice] = useState('');
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const elevenlabs = useMemo(() => new ElevenLabsClient({
-    apiKey: process.env.ELEVENLABS_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
   }), []);
 
   useEffect(() => {
@@ -38,6 +39,13 @@ const ElevenLabsComponent: React.FC = () => {
     setAudioUrl(audioUrl);
   };
 
+  useEffect(() => {
+    if (audioUrl && audioRef.current) {
+      audioRef.current.load();
+      audioRef.current.play().catch(error => console.error('Error playing audio:', error));
+    }
+  }, [audioUrl]);
+
   const readableToBlob = async (readable: Readable): Promise<Blob> => {
     const chunks: Uint8Array[] = [];
     for await (const chunk of readable) {
@@ -54,11 +62,12 @@ const ElevenLabsComponent: React.FC = () => {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Enter text here"
+        style={{ color: 'black' }}
       />
       <div>
         <label>
           Select Model:
-          <select value={model} onChange={(e) => setModel(e.target.value)}>
+          <select value={model} onChange={(e) => setModel(e.target.value)} style={{ color: 'black' }}>
             <option value="eleven_multilingual_v2">eleven_multilingual_v2</option>
             <option value="eleven_monolingual_v1">eleven_monolingual_v1</option>
           </select>
@@ -67,7 +76,7 @@ const ElevenLabsComponent: React.FC = () => {
       <div>
         <label>
           Select Voice:
-          <select value={selectedVoice} onChange={(e) => setSelectedVoice(e.target.value)}>
+          <select value={selectedVoice} onChange={(e) => setSelectedVoice(e.target.value)} style={{ color: 'black' }}>
             {voices.voices.map((voice) => (
               <option key={voice.name} value={voice.name}>
                 {voice.name}
@@ -78,7 +87,7 @@ const ElevenLabsComponent: React.FC = () => {
       </div>
       <button onClick={generateAudio}>Generate and Play Audio</button>
       {audioUrl && (
-        <audio controls src={audioUrl}>
+        <audio ref={audioRef} controls src={audioUrl}>
           Your browser does not support the audio element.
         </audio>
       )}
@@ -86,4 +95,4 @@ const ElevenLabsComponent: React.FC = () => {
   );
 };
 
-export default ElevenLabsComponent;
+export default ElevenLabsComponentUI;

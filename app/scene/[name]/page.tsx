@@ -1,17 +1,23 @@
-"use client";
+"use client"
 
-import { useParams } from "next/navigation";
-import { Suspense } from "react";
-import dynamic from "next/dynamic";
+import { useParams, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
+import dynamic from "next/dynamic"
 
 const ARScene = dynamic(() => import("@/components/ARScene"), {
   ssr: false,
   loading: () => <p>Loading AR Scene...</p>,
-});
+})
 
 export default function ScenePage() {
-  const params = useParams();
-  const petName = params.name as string;
+  const params = useParams()
+  const searchParams = useSearchParams()
+  const petName = params.name as string
+  const modelUrl = searchParams.get("modelUrl")
+
+  if (!modelUrl) {
+    return <div>Error: No model URL provided</div>
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -20,5 +26,5 @@ export default function ScenePage() {
         <ARScene />
       </Suspense>
     </main>
-  );
+  )
 }
