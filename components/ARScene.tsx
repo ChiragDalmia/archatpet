@@ -116,7 +116,7 @@ function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
           </Suspense>
         </XR>
       </Canvas>
-      <AudioManager characterName="John" />
+      {/* <AudioManager characterName="John" /> */}
     </div>
   );
 }
