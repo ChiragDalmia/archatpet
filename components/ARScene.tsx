@@ -56,6 +56,8 @@ function Model({
 
 function Plane(props: JSX.IntrinsicElements["mesh"]) {
   const [ref] = usePlane(() => ({
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
     ...props,
   }));
