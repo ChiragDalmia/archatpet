@@ -2,40 +2,55 @@
 
 import "regenerator-runtime/runtime";
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const RecordAudio = ({ characterName }: { characterName: string }) => {
   const lowerCaseCharacterName = characterName.toLowerCase();
   const stopTalkingTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   const [isTalking, setIsTalking] = useState(false);
   const [message, setMessage] = useState("");
   const [prevTranscript, setPrevTranscript] = useState("");
 
-  const updateIsTalking = useCallback((currentTranscript: string) => {
-    const relevantSpeech = currentTranscript.slice(prevTranscript.length);
+  const resetMessage = () => {
+    setMessage("");
+    resetTranscript();
+  };
 
-    if (isTalking) {
-      setMessage((prev) => prev + relevantSpeech);
-      
-      if (stopTalkingTimeout.current) {
-        clearTimeout(stopTalkingTimeout.current);
+  const updateIsTalking = useCallback(
+    (currentTranscript: string) => {
+      const relevantSpeech = currentTranscript.slice(prevTranscript.length);
+
+      if (isTalking) {
+        setMessage((prev) => prev + relevantSpeech);
+
+        if (stopTalkingTimeout.current) {
+          clearTimeout(stopTalkingTimeout.current);
+        }
+
+        stopTalkingTimeout.current = setTimeout(() => {
+          setIsTalking(false);
+          console.log("Stopped paying attention");
+        }, 4000);
       }
 
-      stopTalkingTimeout.current = setTimeout(() => {
-        setIsTalking(false);
-        console.log("Stopped paying attention");
-      }, 4000);
-    }
-
-    const lowerTranscript = currentTranscript.toLowerCase();
-    if (lowerTranscript.includes(lowerCaseCharacterName) && !isTalking && message === "") {
-      setIsTalking(true);
-      console.log("Started paying attention");
-    }
-  }, [isTalking, message, prevTranscript, lowerCaseCharacterName]);
+      const lowerTranscript = currentTranscript.toLowerCase();
+      if (
+        lowerTranscript.includes(lowerCaseCharacterName) &&
+        !isTalking &&
+        message === ""
+      ) {
+        setIsTalking(true);
+        console.log("Started paying attention");
+      }
+    },
+    [isTalking, message, prevTranscript, lowerCaseCharacterName]
+  );
 
   // Start continuous listening on mount
   useEffect(() => {
@@ -64,6 +79,9 @@ const RecordAudio = ({ characterName }: { characterName: string }) => {
     <div>
       <p>{isTalking ? "Listening!" : "Not listening!"}</p>
       <p>Message: {message}</p>
+      {message != "" && !isTalking && (
+        <p onClick={resetMessage}>Reset message</p>
+      )}
     </div>
   );
 };
