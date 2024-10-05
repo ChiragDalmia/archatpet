@@ -1,7 +1,10 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Luckiest_Guy } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const luckiestGuy = Luckiest_Guy({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export const metadata = {
   title: "ARChatPet",
@@ -15,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={luckiestGuy.className}>{children}</body>
     </html>
   );
 }

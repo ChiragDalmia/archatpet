@@ -1,10 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 @layer utilities {
   .text-balance {
@@ -67,7 +65,11 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
-
+p, button {
+  color: black;
+  font-family: 'PT Sans', sans-serif;
+  font-size: 1.5rem;
+}
 @layer base {
   * {
     @apply border-border;
@@ -75,4 +77,67 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0px;
+  font-family: Arial, sans-serif;
+  background-color: #CDF6FF;
+}
+
+header,
+section {
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 6rem;
+  position: relative;
+  z-index: 1;
+}
+
+header {
+  color: white;
+  
+}
+
+footer {
+  font-family: 'PT Sans', sans-serif;
+  width: 100%;
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 2rem;
+  position: relative;
+  z-index: 1;
+  margin-top: 20px;
+}
+
+.sectionRight {
+  justify-content: end;
+  align-items: center;
+  @apply md:p-20;
+}
+
+.sectionLeft {
+  justify-content: start;
+  align-items: center;
+  @apply md:p-20;
+}
+
+#model {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 0;
+}
+
+a {
+  min-width: 50px;
 }
