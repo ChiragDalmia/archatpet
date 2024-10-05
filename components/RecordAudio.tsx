@@ -1,19 +1,31 @@
-interface RecordAudioProps {}
+"use client";
 
-function handleOnRecord() {
-  const SpeechRecognition =
-    // @ts-ignore
-    window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
+import 'regenerator-runtime/runtime';
+import React from 'react';
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
-  recognition.start();
+const RecordAudio = () => {
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
 
-  recognition.onresult = async function(event) {
-    const transcript = event.results[0][0].transcript;
-    console.log('transcript', transcript)
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>;
   }
-}
 
-export default function RecordAudio(props: RecordAudioProps) {
-  return <button onClick={handleOnRecord}>Record</button>;
-}
+  return (
+    <div>
+      <p>Microphone: {listening ? 'on' : 'off'}</p>
+      <button onClick={SpeechRecognition.startListening}>Start</button>
+      <button onClick={SpeechRecognition.stopListening}>Stop</button>
+      <button onClick={resetTranscript}>Reset</button>
+      <p>{transcript}</p>
+    </div>
+  );
+};
+export default RecordAudio;
