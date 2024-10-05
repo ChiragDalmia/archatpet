@@ -1,12 +1,19 @@
 "use client";
 
 import "regenerator-runtime/runtime";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
-const RecordAudio = ({ characterName }: { characterName: string }) => {
+const RecordAudio = forwardRef(({ characterName, handleMessage }: { characterName: string; handleMessage: (message: string) => void }, ref) => {
   const lowerCaseCharacterName = characterName.toLowerCase();
   const stopTalkingTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -16,11 +23,6 @@ const RecordAudio = ({ characterName }: { characterName: string }) => {
   const [isTalking, setIsTalking] = useState(false);
   const [message, setMessage] = useState("");
   const [prevTranscript, setPrevTranscript] = useState("");
-
-  const resetMessage = () => {
-    setMessage("");
-    resetTranscript();
-  };
 
   const updateIsTalking = useCallback(
     (currentTranscript: string) => {
@@ -35,6 +37,7 @@ const RecordAudio = ({ characterName }: { characterName: string }) => {
 
         stopTalkingTimeout.current = setTimeout(() => {
           setIsTalking(false);
+          handleMessage(message);
           console.log("Stopped paying attention");
         }, 4000);
       }
@@ -52,10 +55,22 @@ const RecordAudio = ({ characterName }: { characterName: string }) => {
     [isTalking, message, prevTranscript, lowerCaseCharacterName]
   );
 
+  // Function to start listening, reset transcript, and clear the message
+  const startListening = useCallback(() => {
+    setMessage(""); // Clear message
+    resetTranscript(); // Reset transcript
+    SpeechRecognition.startListening({ continuous: true }); // Start listening
+  }, [resetTranscript]);
+
+  // Expose the startListening function to parent components
+  useImperativeHandle(ref, () => ({
+    startListening,
+  }));
+
   // Start continuous listening on mount
   useEffect(() => {
     if (browserSupportsSpeechRecognition) {
-      SpeechRecognition.startListening({ continuous: true });
+      startListening(); // Use the new startListening function
     }
     return () => {
       SpeechRecognition.stopListening();
@@ -63,7 +78,7 @@ const RecordAudio = ({ characterName }: { characterName: string }) => {
         clearTimeout(stopTalkingTimeout.current);
       }
     };
-  }, [browserSupportsSpeechRecognition]);
+  }, [browserSupportsSpeechRecognition, startListening]);
 
   // Update state based on transcript changes
   useEffect(() => {
@@ -79,11 +94,8 @@ const RecordAudio = ({ characterName }: { characterName: string }) => {
     <div>
       <p>{isTalking ? "Listening!" : "Not listening!"}</p>
       <p>Message: {message}</p>
-      {message != "" && !isTalking && (
-        <p onClick={resetMessage}>Reset message</p>
-      )}
     </div>
   );
-};
+});
 
 export default RecordAudio;

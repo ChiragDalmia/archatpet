@@ -12,7 +12,7 @@ const ElevenLabsComponentUI: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const elevenlabs = useMemo(() => new ElevenLabsClient({
-    apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
+    apiKey: process.env.ELEVENLABS_API_KEY,
   }), []);
 
   useEffect(() => {
