@@ -13,7 +13,6 @@ import {
 import { ErrorBoundary } from "react-error-boundary";
 import { Physics, usePlane, useBox } from "@react-three/cannon";
 import * as THREE from "three";
-import { AudioManager } from "./AudioManager";
 
 const store = createXRStore();
 

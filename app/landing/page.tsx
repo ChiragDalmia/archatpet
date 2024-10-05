@@ -45,7 +45,7 @@ export default function Home() {
             innovative platform, which leverages advanced AI technology to
             create dialogue. This feature allows you to keep their memory alive.
             by mimicking the unique personality and behaviour of your beloved
-            companion. Whether it's sharing stories, asking questions, or simply
+            companion. Whether it&apos;s sharing stories, asking questions, or simply
             enjoying their playfulness, you can cherish those heartfelt moments,
             ensuring that their presence remains an important part of your daily
             life.
@@ -74,7 +74,7 @@ export default function Home() {
             Explore and view treasured moments with your pet through
             interactive, immersive 3D visualizations. This feature allows you to
             navigate through beautifully crafted environments that encapsulate
-            the joy of your time together, whether it's a fun day at the park or
+            the joy of your time together, whether it&apos;s a fun day at the park or
             a cozy evening at home. With the ability to engage with these
             immersive scenes, you can revisit those special occasions and
             experience the emotions attached to them, ensuring that the bond you

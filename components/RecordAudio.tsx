@@ -13,7 +13,15 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
-const RecordAudio = forwardRef(({ characterName, handleMessage }: { characterName: string; handleMessage: (message: string) => void }, ref) => {
+interface RecordAudioProps {
+  characterName: string;
+  handleMessage: (message: string) => void;
+}
+
+const RecordAudio = forwardRef<
+  { startListening: () => void },
+  RecordAudioProps
+>(({ characterName, handleMessage }, ref) => {
   const lowerCaseCharacterName = characterName.toLowerCase();
   const stopTalkingTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -52,25 +60,22 @@ const RecordAudio = forwardRef(({ characterName, handleMessage }: { characterNam
         console.log("Started paying attention");
       }
     },
-    [isTalking, message, prevTranscript, lowerCaseCharacterName]
+    [isTalking, message, prevTranscript, lowerCaseCharacterName, handleMessage]
   );
 
-  // Function to start listening, reset transcript, and clear the message
   const startListening = useCallback(() => {
-    setMessage(""); // Clear message
-    resetTranscript(); // Reset transcript
-    SpeechRecognition.startListening({ continuous: true }); // Start listening
+    setMessage("");
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: true });
   }, [resetTranscript]);
 
-  // Expose the startListening function to parent components
   useImperativeHandle(ref, () => ({
     startListening,
   }));
 
-  // Start continuous listening on mount
   useEffect(() => {
     if (browserSupportsSpeechRecognition) {
-      startListening(); // Use the new startListening function
+      startListening();
     }
     return () => {
       SpeechRecognition.stopListening();
@@ -80,14 +85,13 @@ const RecordAudio = forwardRef(({ characterName, handleMessage }: { characterNam
     };
   }, [browserSupportsSpeechRecognition, startListening]);
 
-  // Update state based on transcript changes
   useEffect(() => {
     updateIsTalking(transcript);
     setPrevTranscript(transcript);
   }, [transcript, updateIsTalking]);
 
   if (!browserSupportsSpeechRecognition) {
-    return <p>Browser doesn't support speech recognition.</p>;
+    return <p>Browser doesn&apos;t support speech recognition.</p>;
   }
 
   return (
@@ -97,5 +101,7 @@ const RecordAudio = forwardRef(({ characterName, handleMessage }: { characterNam
     </div>
   );
 });
+
+RecordAudio.displayName = "RecordAudio";
 
 export default RecordAudio;
