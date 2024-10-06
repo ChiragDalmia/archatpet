@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import {useParams, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 
@@ -10,23 +10,23 @@ const ARScene = dynamic(() => import("@/components/ARScene"), {
 });
 
 export default function ScenePage() {
-  // const params = useParams();
+  const params = useParams();
   const searchParams = useSearchParams();
 
-  // const encodedPetName = params.name as string;
+  const encodedPetName = params.name as string;
   const encodedModelUrl = searchParams.get("modelUrl");
 
   if (!encodedModelUrl) {
     return <div>Error: No model URL provided</div>;
   }
 
-  // const petName = decodeURIComponent(encodedPetName);
+  const petName = decodeURIComponent(encodedPetName);
   const modelUrl = decodeURIComponent(encodedModelUrl);
 
   return (
     <main className="">
       <Suspense fallback={<div>Loading AR Scene...</div>}>
-        <ARScene modelURL={modelUrl}/>
+        <ARScene modelURL={modelUrl} petName={petName}/>
       </Suspense>
     </main>
   );

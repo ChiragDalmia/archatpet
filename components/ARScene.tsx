@@ -78,7 +78,7 @@ function ErrorFallback({ error }: { error: Error }) {
   );
 }
 
-export default function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
+export default function ARScene({ modelURL = "/racoon.glb", petName="jellybean" }: { modelURL?: string; petName?:string }) {
   const [position, setPosition] = useState(() => new THREE.Vector3());
 
   const handleEnterAR = useCallback(() => {
@@ -117,7 +117,7 @@ export default function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: strin
           </Suspense>
         </XR>
       </Canvas>
-      <AudioManager characterName="john"/>
+      <AudioManager characterName={petName} />
     </div>
   );
 }
