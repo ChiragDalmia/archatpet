@@ -238,7 +238,7 @@ const createModel = async (e: React.FormEvent) => {
             disabled={images.length === 0 || loading || !petName.trim()}
             className="w-full"
           >
-            {loading ? "Creating 3D Model..." : "Create 3D Model"}
+            {loading ? "Creating 3D Model..." : "PortaPet It"}
           </Button>
         </form>
         {modelUrl && (

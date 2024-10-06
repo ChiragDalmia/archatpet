@@ -7,7 +7,7 @@ const luckiestGuy = Luckiest_Guy({
 });
 
 export const metadata = {
-  title: "ARChatPet",
+  title: "PortaPet",
   description: "WebXR Voice Assistant Mascot",
 };
 
