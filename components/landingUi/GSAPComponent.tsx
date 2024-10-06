@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,8 +9,15 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
 }
 
+// Define a type for the Spline child object
+type SplineChild = {
+  rotation: { x: number; y: number; z: number };
+  position: { x: number; y: number; z: number };
+  scale: { x: number; y: number; z: number };
+};
+
 interface GSAPComponentProps {
-  childRef: React.RefObject<any>;
+  childRef: React.RefObject<SplineChild>;
 }
 
 const GSAPComponent: React.FC<GSAPComponentProps> = ({ childRef }) => {
@@ -18,15 +26,6 @@ const GSAPComponent: React.FC<GSAPComponentProps> = ({ childRef }) => {
       console.error("Child ref is not set");
       return;
     }
-
-    const commonScrollTriggerConfig = {
-      start: "top center",
-      end: "bottom center",
-      scrub: 3,
-      invalidateOnRefresh: true,
-      pinSpacing: false,
-      fastScrollEnd: true,
-    };
 
     const timeline = gsap.timeline();
 
@@ -44,12 +43,12 @@ const GSAPComponent: React.FC<GSAPComponentProps> = ({ childRef }) => {
       .to(childRef.current.rotation, { x: 0, y: Math.PI / 4, z: 0 }, "feature")
       .to(childRef.current.position, { x: 400, y: -200, z: -500 }, "feature")
       .to(childRef.current.scale, { x: 2, y: 2, z: 2 }, "feature");
-      
+
     timeline
       .to(
         childRef.current.rotation,
         { x: Math.PI / 6, y: 0, z: -Math.PI / 8 },
-        "feauture2"
+        "feature2"
       )
       .to(childRef.current.position, { x: -300, y: -300, z: 0 }, "feature2")
       .to(childRef.current.scale, { x: 2.5, y: 2.5, z: 2.5 }, "feature2");
