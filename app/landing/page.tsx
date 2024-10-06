@@ -1,8 +1,7 @@
 "use client";
 import Cloud from "@/components/landingUi/Cloud";
 import Model from "@/components/Model";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { Github } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -10,8 +9,8 @@ export default function Home() {
       <Model />
       <header>
         <Cloud />
-        <div className="flex justify-center flex-col items-center">
-          Title
+        <div className="text-white flex justify-center flex-col items-center">
+          PortaPet
           <button
             type="button"
             className="text-white bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-4 me-3 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
@@ -82,7 +81,7 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <footer className="flex flex-col items-center justify-center">
+      <footer className="flex flex-col items-center justify-center" id="footer">
         <p>Made with ❤️</p>
         <div className="flex space-x-4 mt-2">
           <a
@@ -90,28 +89,28 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FontAwesomeIcon icon={faGithub} className="custom-icon" />
+            <Github />
           </a>
           <a
             href="https://github.com/Ibrahim-Siddique"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FontAwesomeIcon icon={faGithub} className="custom-icon" />
+            <Github />
           </a>
           <a
             href="https://github.com/krishnacheemalapati"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FontAwesomeIcon icon={faGithub} className="custom-icon" />
+            <Github />
           </a>
           <a
             href="https://github.com/Edddro"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FontAwesomeIcon icon={faGithub} className="custom-icon" />
+            <Github />
           </a>
         </div>
       </footer>
