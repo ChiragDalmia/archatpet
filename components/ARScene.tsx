@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useRef, useCallback, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, extend } from "@react-three/fiber";
 import {
   XR,
   useXR,
@@ -14,8 +14,10 @@ import { ErrorBoundary } from "react-error-boundary";
 import * as THREE from "three";
 import { AudioManager } from "./AudioManager";
 
+// Extend THREE to R3F
+extend(THREE);
+
 const store = createXRStore({
-  hand: { teleportPointer: true },
   controller: { teleportPointer: true },
 });
 
