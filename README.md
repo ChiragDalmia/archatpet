@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# PortaPet - README
 
-First, run the development server:
+## Inspiration
+Moving to a new country can make it difficult to stay connected with loved ones, especially pets. PortaPet was created to ease this separation by providing comfort and companionship through an interactive virtual experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## What it Does
+PortaPet allows users to upload images of their pets, which are converted into 3D models using augmented reality. Users can talk to their virtual pets via AI-driven conversations and visualize memories through lifelike 3D renderings. It offers emotional support for those separated from their pets or grieving their loss.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How We Built It
+- **Frontend**: Built using TypeScript in a Next.js framework with Tailwind CSS for styling. We used Lucide React for icons, Three.js for 3D rendering, and Spline & GSAP for animations.
+- **Backend**: Images uploaded by users are stored via Vercel Blob, which sends them to MeshyAPI for 3D rendering. We used Cloudflare for AI responses and ElevenLabs for speech synthesis, allowing pets to respond naturally. Wake word functionality triggers interactions when the pet's name is called.
+- **Tech Stack**: Next.js, Three.js, Vercel Blob, MeshyAPI, Cloudflare, ElevenLabs, Web Speech API.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Challenges
+- Balancing technical limitations with the emotional aspect of the project.
+- Ensuring AI-generated conversations felt personalized and genuine.
+- Maintaining performance and cross-device compatibility for real-time interaction.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Accomplishments
+- Successfully built an immersive and emotional user experience.
+- Integrated advanced technologies (AI, 3D rendering, XR, and speech synthesis) into a unified platform.
 
-## Learn More
+## Lessons Learned
+- The importance of human-centered design in emotionally-driven projects.
+- How to implement and deploy extended reality (XR) apps and 3D rendering.
+- Fine-tuning AI for smooth cross-device interactions.
 
-To learn more about Next.js, take a look at the following resources:
+## Future Plans
+- Support multiple pets in one world.
+- Implement a memory system for users to relive moments with their pets.
+- Add haptic feedback for a stronger sense of connection.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How to Run
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Dependencies
+Key dependencies:
+- `next`
+- `three`
+- `@react-three/fiber`
+- `@react-three/xr`
+- `@vercel/blob`
+- `elevenlabs`
+- `openai`
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is licensed under the MIT License.
