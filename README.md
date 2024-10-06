@@ -9,7 +9,7 @@ PortaPet allows users to upload images of their pets, which are converted into 3
 
 ## How We Built It
 - **Frontend**: Built using TypeScript in a Next.js framework with Tailwind CSS for styling. We used Lucide React for icons, Three.js for 3D rendering, and Spline & GSAP for animations.
-- **Backend**: Images uploaded by users are stored via Vercel Blob, which sends them to MeshyAPI for 3D rendering. We used Cloudflare for AI responses and ElevenLabs for speech synthesis, allowing pets to respond naturally. Wake word functionality triggers interactions when the pet's name is called.
+- **Backend**: Images uploaded by users are stored using Vercel Blob, which are then sent to MeshyAPI to generate 3D models. These models are re-uploaded to the blob for rendering in the XR/AR scene. Cloudflare is used for AI-driven responses, while ElevenLabs provides speech synthesis, allowing the pets to communicate naturally. Wake word algorithm triggers interactions whenever the pet’s name is called.
 - **Tech Stack**: Next.js, WebXR, Three.js, Vercel Blob, MeshyAPI, Cloudflare, ElevenLabs, Web Speech API.
 
 ## Challenges
