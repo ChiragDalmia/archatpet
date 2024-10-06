@@ -127,15 +127,25 @@ footer {
 }
 
 .sectionRight {
+  display: flex;
   justify-content: end;
   align-items: center;
-  @apply md:p-20;
+  text-align: right;
+  width: 60%;
+  height: 100%;
+  margin-left: auto;
+  padding: 20px;
 }
 
 .sectionLeft {
+  display: flex;
   justify-content: start;
   align-items: center;
-  @apply md:p-20;
+  text-align: left;
+  width: 60%;
+  height: 100%;
+  margin-right: auto;
+  padding: 20px;
 }
 
 #model {
@@ -143,6 +153,10 @@ footer {
   height: 100%;
   position: fixed;
   z-index: 0;
+}
+
+button {
+  z-index: 2;
 }
 
 a {
