@@ -11,9 +11,13 @@ const ElevenLabsComponentUI: React.FC = () => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const elevenlabs = useMemo(() => new ElevenLabsClient({
-    apiKey: process.env.ELEVENLABS_API_KEY,
-  }), []);
+  const elevenlabs = useMemo(
+    () =>
+      new ElevenLabsClient({
+        apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
+      }),
+    []
+  );
 
   useEffect(() => {
     const fetchVoices = async () => {

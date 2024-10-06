@@ -12,6 +12,7 @@ import {
 import { useGLTF, Environment, useProgress, Html } from "@react-three/drei";
 import { ErrorBoundary } from "react-error-boundary";
 import * as THREE from "three";
+import { AudioManager } from "./AudioManager";
 
 const store = createXRStore({
   hand: { teleportPointer: true },
@@ -100,15 +101,14 @@ export default function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: strin
                 <Environment preset="sunset" />
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} castShadow />
-                <Model
-                  url={modelURL}
-                  position={[0, 0, -1]}
-                  rotation={[0, 0, 0]}
-                />
+
                 <TeleportTarget onTeleport={setPosition}>
-                  <mesh scale={[10, 1, 10]} position={[0, -0.5, 0]}>
-                    <boxGeometry />
-                    <meshBasicMaterial color="green" />
+                  <mesh scale={1} position={[0, 0, -5]}>
+                    <Model
+                      url={modelURL}
+                      position={[0, 0, 0]}
+                      rotation={[0, 0, 0]}
+                    />
                   </mesh>
                 </TeleportTarget>
                 <Plane position={[0, -0.5, 0]} />
@@ -117,6 +117,7 @@ export default function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: strin
           </Suspense>
         </XR>
       </Canvas>
+      <AudioManager characterName="john"/>
     </div>
   );
 }
