@@ -1,20 +1,22 @@
 "use client";
 
-import { Suspense, useRef, useCallback } from "react";
+import { Suspense, useRef, useCallback, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { XR, createXRStore } from "@react-three/xr";
 import {
-  useGLTF,
-  Environment,
-  useProgress,
-  Html,
-  DragControls,
-} from "@react-three/drei";
+  XR,
+  useXR,
+  createXRStore,
+  XROrigin,
+  TeleportTarget,
+} from "@react-three/xr";
+import { useGLTF, Environment, useProgress, Html } from "@react-three/drei";
 import { ErrorBoundary } from "react-error-boundary";
-import { Physics, usePlane, useBox } from "@react-three/cannon";
 import * as THREE from "three";
 
-const store = createXRStore();
+const store = createXRStore({
+  hand: { teleportPointer: true },
+  controller: { teleportPointer: true },
+});
 
 function Model({
   url,
@@ -26,43 +28,33 @@ function Model({
   rotation: [number, number, number];
 }) {
   const { scene } = useGLTF(url);
-  const [ref, api] = useBox(() => ({ mass: 1, position, rotation }));
   const groupRef = useRef<THREE.Group>(null);
+  const xr = useXR();
 
   useFrame(() => {
-    if (ref.current) {
-      api.position.subscribe((v) =>
-        ref.current!.position.set(v[0], v[1], v[2])
-      );
-      api.rotation.subscribe((v) =>
-        ref.current!.rotation.set(v[0], v[1], v[2])
-      );
+    if (groupRef.current) {
+      groupRef.current.position.set(...position);
+      groupRef.current.rotation.set(...rotation);
     }
   });
 
+  const handleSelect = useCallback(() => {
+    if (xr.session && groupRef.current) {
+      // Apply a small upward movement when selected in XR mode
+      groupRef.current.position.y += 0.1;
+    }
+  }, [xr.session]);
+
   return (
-    <group ref={groupRef}>
-      <DragControls>
-        <group
-          ref={ref as unknown as React.RefObject<THREE.Group>}
-          dispose={null}
-        >
-          <primitive object={scene} scale={0.5} />
-        </group>
-      </DragControls>
-    </group>
+      <group ref={groupRef} onClick={handleSelect}>
+        <primitive object={scene} scale={0.5} />
+      </group>
   );
 }
 
 function Plane(props: JSX.IntrinsicElements["mesh"]) {
-  const [ref] = usePlane(() => ({
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
-    ...props,
-  }));
   return (
-    <mesh ref={ref as unknown as React.RefObject<THREE.Mesh>} receiveShadow>
+    <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} {...props}>
       <planeGeometry args={[1000, 1000]} />
       <shadowMaterial color="#171717" transparent opacity={0.4} />
     </mesh>
@@ -86,6 +78,8 @@ function ErrorFallback({ error }: { error: Error }) {
 }
 
 function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
+  const [position, setPosition] = useState(() => new THREE.Vector3());
+
   const handleEnterAR = useCallback(() => {
     store.enterAR();
   }, []);
@@ -102,22 +96,27 @@ function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
         <XR store={store}>
           <Suspense fallback={<Loader />}>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Physics>
+              <XROrigin position={position}>
                 <Environment preset="sunset" />
                 <ambientLight intensity={0.5} />
                 <pointLight position={[10, 10, 10]} castShadow />
                 <Model
                   url={modelURL}
-                  position={[0, 5, 0]}
+                  position={[0, 0, -1]}
                   rotation={[0, 0, 0]}
                 />
-                <Plane position={[0, 0, 0]} />
-              </Physics>
+                <TeleportTarget onTeleport={setPosition}>
+                  <mesh scale={[10, 1, 10]} position={[0, -0.5, 0]}>
+                    <boxGeometry />
+                    <meshBasicMaterial color="green" />
+                  </mesh>
+                </TeleportTarget>
+                <Plane position={[0, -0.5, 0]} />
+              </XROrigin>
             </ErrorBoundary>
           </Suspense>
         </XR>
       </Canvas>
-      {/* <AudioManager characterName="John" /> */}
     </div>
   );
 }
