@@ -31,7 +31,7 @@ export default function ScenePage() {
         <p className="break-all">{modelUrl}</p>
       </div>
       <Suspense fallback={<div>Loading AR Scene...</div>}>
-        <ARScene modelURL={modelUrl} />
+        <ARScene modelURL={modelUrl} petName={petName} />
       </Suspense>
     </main>
   );

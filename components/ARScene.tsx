@@ -12,6 +12,7 @@ import {
 import { useGLTF, Environment, useProgress, Html } from "@react-three/drei";
 import { ErrorBoundary } from "react-error-boundary";
 import * as THREE from "three";
+import { AudioManager } from "./AudioManager";
 
 const store = createXRStore({
   hand: { teleportPointer: true },
@@ -46,9 +47,9 @@ function Model({
   }, [xr.session]);
 
   return (
-      <group ref={groupRef} onClick={handleSelect}>
-        <primitive object={scene} scale={0.5} />
-      </group>
+    <group ref={groupRef} onClick={handleSelect}>
+      <primitive object={scene} scale={0.5} />
+    </group>
   );
 }
 
@@ -77,7 +78,13 @@ function ErrorFallback({ error }: { error: Error }) {
   );
 }
 
-function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
+function ARScene({
+  modelURL = "/racoon.glb",
+  petName = "jellybean",
+}: {
+  modelURL?: string;
+  petName?: string;
+}) {
   const [position, setPosition] = useState(() => new THREE.Vector3());
 
   const handleEnterAR = useCallback(() => {
@@ -111,6 +118,7 @@ function ARScene({ modelURL = "/racoon.glb" }: { modelURL?: string }) {
                     <meshBasicMaterial color="green" />
                   </mesh>
                 </TeleportTarget>
+                <AudioManager characterName={petName} />
                 <Plane position={[0, -0.5, 0]} />
               </XROrigin>
             </ErrorBoundary>

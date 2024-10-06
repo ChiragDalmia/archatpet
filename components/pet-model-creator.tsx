@@ -109,6 +109,8 @@ const createModel = async (e: React.FormEvent) => {
   e.preventDefault();
   setLoading(true);
   try {
+    setImages([]);
+    stopCamera();
     const imageUrl = images[0].url;
     const response = await fetch("/api/create-model", {
       method: "POST",
