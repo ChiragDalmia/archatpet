@@ -191,7 +191,7 @@ const createModel = async (e: React.FormEvent) => {
               ref={fileInputRef}
             />
           </div>
-          <div className="flex space-x-2">
+          <div className="space-y-2 flex flex-col">
             <Button type="button" onClick={toggleCamera}>
               {isCameraOn ? "Stop Camera" : "Start Camera"}
             </Button>
