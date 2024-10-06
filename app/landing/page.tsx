@@ -1,5 +1,5 @@
 "use client";
-import Cloud from "@/components/Cloud";
+import Cloud from "@/components/landingUi/Cloud";
 import Model from "@/components/Model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
