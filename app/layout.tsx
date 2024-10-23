@@ -1,8 +1,8 @@
 import "./globals.css";
-import { Luckiest_Guy } from "next/font/google";
+import { DynaPuff } from "next/font/google";
 
-const luckiestGuy = Luckiest_Guy({
-  weight: "400",
+const dynaPuff = DynaPuff({
+  weight: "700",
   subsets: ["latin"],
 });
 
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={luckiestGuy.className}>{children}</body>
+      <body className={dynaPuff.className}>{children}</body>
     </html>
   );
 }
