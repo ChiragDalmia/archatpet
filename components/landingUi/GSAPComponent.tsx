@@ -6,7 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Define a type for the 3D object
 interface ChildRefObject {
   rotation: { x: number; y: number; z: number };
   position: { x: number; y: number; z: number };
@@ -21,66 +20,79 @@ const GSAPComponent: React.FC<GSAPComponentProps> = ({ childRef }) => {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
-    if (!childRef.current) {
-      console.error("Child ref is not set");
-      return;
-    }
+    if (!childRef.current) return;
 
-    timelineRef.current = gsap.timeline();
-    const timeline = timelineRef.current;
+    const timeline = gsap.timeline();
+    timelineRef.current = timeline;
 
-    // About section
-    timeline
-      .to(
-        childRef.current.rotation,
-        { x: -Math.PI / 14, z: Math.PI / 36 },
-        "about"
+    const animateSection = (
+      section: string,
+      rotation: number[],
+      position: number[],
+      scale: number
+    ) => {
+      timeline
+        .to(
+          childRef.current!.rotation,
+          { x: rotation[0], y: rotation[1], z: rotation[2] },
+          section
+        )
+        .to(
+          childRef.current!.position,
+          { x: position[0], y: position[1], z: position[2] },
+          section
+        )
+        .to(childRef.current!.scale, { x: scale, y: scale, z: scale }, section);
+    };
+
+    const sections = [
+      {
+        name: "about",
+        rotation: [-Math.PI / 14, 0, Math.PI / 36],
+        position: [-200, -400, 0],
+        scale: 3,
+      },
+      {
+        name: "sponsors",
+        rotation: [0, Math.PI / 4, 0],
+        position: [400, -200, -500],
+        scale: 2,
+      },
+      {
+        name: "joinDiscord",
+        rotation: [Math.PI / 6, 0, -Math.PI / 8],
+        position: [-300, -300, 0],
+        scale: 2.5,
+      },
+      {
+        name: "faq",
+        rotation: [0, Math.PI / 2, Math.PI / 10],
+        position: [-200, -100, 200],
+        scale: 1.5,
+      },
+      {
+        name: "location",
+        rotation: [-Math.PI / 12, -Math.PI / 4, 0],
+        position: [-100, -300, -100],
+        scale: 2,
+      },
+      {
+        name: "footer",
+        rotation: [0, 0.3, 0],
+        position: [0, -301.01, 0],
+        scale: 1.99,
+      },
+    ];
+
+    sections.forEach((section) =>
+      animateSection(
+        section.name,
+        section.rotation,
+        section.position,
+        section.scale
       )
-      .to(childRef.current.position, { x: -200, y: -400 }, "about")
-      .to(childRef.current.scale, { x: 3, y: 3, z: 3 }, "about");
+    );
 
-   timeline
-     .to(childRef.current.rotation, { x: 0, y: Math.PI / 4, z: 0 }, "sponsors")
-     .to(childRef.current.position, { x: 400, y: -200, z: -500 }, "sponsors")
-     .to(childRef.current.scale, { x: 2, y: 2, z: 2 }, "sponsors");
-
-   // Join Discord section
-   timeline
-     .to(
-       childRef.current.rotation,
-       { x: Math.PI / 6, y: 0, z: -Math.PI / 8 },
-       "joinDiscord"
-     )
-     .to(childRef.current.position, { x: -300, y: -300, z: 0 }, "joinDiscord")
-     .to(childRef.current.scale, { x: 2.5, y: 2.5, z: 2.5 }, "joinDiscord");
-
-   // FAQ section
-   timeline
-     .to(
-       childRef.current.rotation,
-       { x: 0, y: Math.PI / 2, z: Math.PI / 10 },
-       "faq"
-     )
-     .to(childRef.current.position, { x: -200, y: -100, z: 200 }, "faq")
-     .to(childRef.current.scale, { x: 1.5, y: 1.5, z: 1.5 }, "faq");
-
-   // Location section
-   timeline
-     .to(
-       childRef.current.rotation,
-       { x: -Math.PI / 12, y: -Math.PI / 4, z: 0 },
-       "location"
-     )
-     .to(childRef.current.position, { x: -100, y: -300, z: -100 }, "location")
-     .to(childRef.current.scale, { x: 2, y: 2, z: 2 }, "location");
-
-   // Footer section (reset to initial position)
-   timeline
-     .to(childRef.current.rotation, { x: 0, y: 0.3, z: 0 }, "footer")
-     .to(childRef.current.position, { x: 0, y: -301.01, z: 0 }, "footer")
-     .to(childRef.current.scale, { x: 1.99, y: 1.95, z: 1.68 }, "footer");
-
-    // Set up ScrollTrigger for the entire timeline
     ScrollTrigger.create({
       animation: timeline,
       trigger: "body",
