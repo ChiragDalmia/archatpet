@@ -15,7 +15,44 @@ interface ChildRefObject {
 interface GSAPComponentProps {
   childRef: React.RefObject<ChildRefObject>;
 }
-
+const sections = [
+  {
+    name: "about",
+    rotation: [-Math.PI / 14, 0, Math.PI / 36],
+    position: [-500, -400, 0],
+    scale: 3,
+  },
+  {
+    name: "sponsors",
+    rotation: [0, Math.PI / 4, 0],
+    position: [500, -200, -500],
+    scale: 2,
+  },
+  {
+    name: "joinDiscord",
+    rotation: [Math.PI / 6, 0, -Math.PI / 8],
+    position: [-500, -300, 0],
+    scale: 2.5,
+  },
+  {
+    name: "faq",
+    rotation: [0, 0, 0],
+    position: [500, -100, 200],
+    scale: 2,
+  },
+  {
+    name: "location",
+    rotation: [-Math.PI / 12, -Math.PI / 4, 0],
+    position: [-400, -300, -100],
+    scale: 2,
+  },
+  {
+    name: "footer",
+    rotation: [0, 0, 0],
+    position: [0, -600, 0],
+    scale: 1.99,
+  },
+];
 const GSAPComponent: React.FC<GSAPComponentProps> = ({ childRef }) => {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
@@ -44,45 +81,6 @@ const GSAPComponent: React.FC<GSAPComponentProps> = ({ childRef }) => {
         )
         .to(childRef.current!.scale, { x: scale, y: scale, z: scale }, section);
     };
-
-    const sections = [
-      {
-        name: "about",
-        rotation: [-Math.PI / 14, 0, Math.PI / 36],
-        position: [-200, -400, 0],
-        scale: 3,
-      },
-      {
-        name: "sponsors",
-        rotation: [0, Math.PI / 4, 0],
-        position: [400, -200, -500],
-        scale: 2,
-      },
-      {
-        name: "joinDiscord",
-        rotation: [Math.PI / 6, 0, -Math.PI / 8],
-        position: [-300, -300, 0],
-        scale: 2.5,
-      },
-      {
-        name: "faq",
-        rotation: [0, Math.PI / 2, Math.PI / 10],
-        position: [-200, -100, 200],
-        scale: 1.5,
-      },
-      {
-        name: "location",
-        rotation: [-Math.PI / 12, -Math.PI / 4, 0],
-        position: [-100, -300, -100],
-        scale: 2,
-      },
-      {
-        name: "footer",
-        rotation: [0, 0.3, 0],
-        position: [0, -301.01, 0],
-        scale: 1.99,
-      },
-    ];
 
     sections.forEach((section) =>
       animateSection(
