@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# node files
+**/node_modules/
+/adobuddy/node_modules/
+/adobuddy/.DS_Store
+/adobuddy/dist/
