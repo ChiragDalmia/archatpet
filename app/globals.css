@@ -93,7 +93,8 @@ html {
 }
 
 header,
-section {
+section,
+footer {
   width: 100%;
   height: 100svh;
   display: flex;
@@ -105,47 +106,14 @@ section {
   z-index: 1;
 }
 
-header {
-  color: var(--foreground);
-  background-color: var(--primary);
-}
-
-footer {
-  font-family: 'PT Sans', sans-serif;
-  width: 100%;
-  height: 40vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 2rem;
-  position: relative;
-  z-index: 1;
-  margin-top: 20px;
-  background-color: var(--secondary);
-  color: var(--secondary-foreground);
-}
-
 .sectionRight {
-  display: flex;
   justify-content: end;
   align-items: center;
-  text-align: right;
-  width: 60%;
-  height: 100%;
-  margin-left: auto;
-  padding: 20px;
 }
 
 .sectionLeft {
-  display: flex;
   justify-content: start;
   align-items: center;
-  text-align: left;
-  width: 60%;
-  height: 100%;
-  margin-right: auto;
-  padding: 20px;
 }
 
 #model {
@@ -153,10 +121,6 @@ footer {
   height: 100%;
   position: fixed;
   z-index: 0;
-}
-
-button {
-  z-index: 2;
 }
 
 a {
@@ -169,4 +133,3 @@ a:hover {
   color: var(--primary-foreground);
   background-color: var(--primary);
 }
-
