@@ -65,14 +65,13 @@ export default function Home() {
           <Model />
         </div>
         <div className="relative z-10">
-          <header className="w-full h-screen flex flex-col justify-center items-center text-center">
-            <div className="space-y-6">
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-3d text-white text-transparent bg-clip-text">
-                PORTAPET
-              </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
-                Bringing your pets to life through immersive technology, keeping
-                your bond strong no matter the distance.
+          <header className="w-full h-screen flex flex-col justify-center items-center text-center relative">
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-3d text-white text-transparent bg-clip-text absolute top-1/2 -translate-y-1/2">
+              PORTAPET
+            </h1>
+            <div className="space-y-6 mt-96">
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto px-4">
+                Bringing your pets to life through immersive AR technology
               </p>
               <Link href="/app">
                 <Button className="text-white font-bold px-8 py-6 text-xl rounded-full">
