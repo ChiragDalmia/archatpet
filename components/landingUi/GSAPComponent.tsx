@@ -97,7 +97,7 @@ const GSAPComponent: React.FC<GSAPComponentProps> = ({ childRef }) => {
       start: "top top",
       end: "bottom bottom",
       scrub: 2,
-      markers: true,
+      markers: false,
       invalidateOnRefresh: true,
       pinSpacing: false,
       fastScrollEnd: true,
