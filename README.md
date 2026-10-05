@@ -1,6 +1,8 @@
 
 # PortaPet - README
 
+**Case study:** [chiragdalmia.com/projects/archatpet](https://www.chiragdalmia.com/projects/archatpet)
+
 ## Inspiration
 Moving to a new country can make it difficult to stay connected with loved ones, especially pets. PortaPet was created to ease this separation by providing comfort and companionship through an interactive virtual experience.
 
